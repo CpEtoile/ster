@@ -30,9 +30,7 @@ def setup_two_files(
     bdd_ctx["files"] = [f1, f2]
 
 
-@given(
-    parsers.parse('a project with multiple taxonomy files "{file1}", "{file2}", and "{file3}"')
-)
+@given(parsers.parse('a project with multiple taxonomy files "{file1}", "{file2}", and "{file3}"'))
 def setup_three_files(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
