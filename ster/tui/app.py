@@ -1643,7 +1643,7 @@ class OntologyApp(App):
             self.notify(result.error or "Command failed.", severity="error")
             return
         # The service swapped a fresh authority taxonomy into the workspace.
-        self.tax = self._workspace.taxonomies[self._path]  # type: ignore[union-attr]
+        self.tax = self._workspace.taxonomies[self._path]
         self.search_rows = data.search_rows(self.tax, self.lang)
         self._invalidate_lint()  # the edit may fix/introduce issues
         self._rebuild_affected(result.affected_uris, select)  # rebuild only the touched pane(s)
@@ -1767,7 +1767,7 @@ class OntologyApp(App):
             if not result.ok:
                 self.notify(result.error or "Fix failed.", severity="error")
                 return False
-        self.tax = self._workspace.taxonomies[self._path]  # type: ignore[union-attr]
+        self.tax = self._workspace.taxonomies[self._path]
         self.search_rows = data.search_rows(self.tax, self.lang)
         self._invalidate_lint()
         self._dirty_after_fix = True
