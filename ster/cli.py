@@ -19,6 +19,7 @@ from rich.prompt import Confirm, Prompt
 
 from . import operations, store
 from ._version import __version__ as _VERSION
+from .cli_files_picker import parse_comma_selection, parse_numeric_picker_choice
 from .display import console, render_handle_list, render_tree
 from .exceptions import SkostaxError
 from .model import LabelType, Taxonomy
@@ -407,14 +408,9 @@ def _pick_file(files: list[Path]) -> Path | list[Path]:
 def _parse_numeric_picker_choice(
     idx: int, create_idx: int, quit_idx: int, files: list[Path]
 ) -> tuple[bool, Path | None | object]:
-    if idx == quit_idx:
-        return True, _QUIT_SENTINEL
-    if idx == create_idx:
-        return True, None
-    if 1 <= idx <= len(files):
-        return True, files[idx - 1]
-    err.print(f"[red]Enter a number between 1 and {quit_idx}.[/red]")
-    return False, None
+    return parse_numeric_picker_choice(
+        idx, create_idx, quit_idx, files, err=err, quit_sentinel=_QUIT_SENTINEL
+    )
 
 
 def _parse_file_picker_choice(
@@ -772,17 +768,7 @@ def _format_home_item_label(val: Path | None, found: list[Path]) -> str:
 
 
 def _parse_comma_selection(raw: str, items: list[Path | None]) -> list[Path] | None:
-    selected_files: list[Path] = []
-    for part in raw.split(","):
-        try:
-            idx = int(part.strip()) - 1
-            if 0 <= idx < len(items):
-                val = items[idx]
-                if _is_toggleable_file(val) and isinstance(val, Path):
-                    selected_files.append(val)
-        except ValueError:
-            pass
-    return selected_files if selected_files else None
+    return parse_comma_selection(raw, items, is_toggleable_fn=_is_toggleable_file)
 
 
 def _select_home_file_numeric(found: list[Path]) -> Path | list[Path] | None:
